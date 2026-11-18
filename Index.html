@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARONGO™ | The Art of Becoming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --coffee: #eaddcf; /* Replaced white with Coffee */
+            --coffee-dark: #6b5b4b; 
+            --caramel: #b87d4b; /* New Caramel accent color */
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--coffee);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; letter-spacing: 1px; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 50px; background-color: rgba(234, 221, 207, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: 3px; font-weight: 600; }
+        .logo span { font-size: 0.6rem; vertical-align: super; margin-left: 2px; }
+
+        .nav-links { display: flex; gap: 30px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; }
+        .nav-links a:hover { color: var(--caramel); transition: color 0.3s ease; }
+
+        .mobile-menu { display: none; cursor: pointer; font-size: 1.5rem; }
+
+        .mobile-nav {
+            display: none; position: fixed; top: 70px; left: 0; width: 100%;
+            background-color: var(--coffee); border-bottom: 1px solid #ccc;
+            flex-direction: column; padding: 20px; z-index: 999; text-align: center;
+        }
+        .mobile-nav a { padding: 15px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #ccc; }
+        .mobile-nav.active { display: flex; }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh; background-color: var(--black); color: var(--coffee);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 0 20px; position: relative;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .hero h1 { font-size: 4rem; margin-bottom: 10px; letter-spacing: 2px; color: var(--coffee); }
+        .hero p { font-size: 0.9rem; letter-spacing: 5px; text-transform: uppercase; color: var(--caramel); margin-bottom: 40px; }
+
+        .btn {
+            display: inline-block; padding: 15px 40px; border: 1px solid var(--caramel);
+            color: var(--caramel); text-transform: uppercase; letter-spacing: 2px;
+            font-size: 0.8rem; transition: all 0.4s ease; cursor: pointer; background: transparent;
+        }
+        .btn:hover { background-color: var(--caramel); color: var(--black); }
+
+        .mountain-divider { width: 100%; height: auto; position: absolute; bottom: 0; left: 0; fill: var(--coffee); }
+
+        /* --- About Section --- */
+        .about { padding: 120px 50px; background-color: var(--coffee); text-align: center; max-width: 800px; margin: 0 auto; }
+        .about h2 { font-size: 2.5rem; margin-bottom: 30px; }
+        .about p { font-size: 1.1rem; color: #333; margin-bottom: 20px; font-weight: 300; }
+
+        /* --- Collection Section --- */
+        .collection { padding: 100px 50px; background-color: #dfd0bf; } /* Slightly darker coffee */
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .product-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+
+        .product-card {
+            background-color: var(--coffee); padding: 30px; text-align: center;
+            width: 100%; max-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease; display: flex; flex-direction: column;
+        }
+        .product-card:hover { transform: translateY(-10px); }
+
+        /* NEW: Image Container for the Logo Overlay */
+        .product-image-container {
+            width: 100%; height: 250px; background-color: #fff;
+            margin-bottom: 25px; position: relative; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .product-img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        /* NEW: The K Logo Overlay */
+        .logo-overlay {
+            position: absolute; width: 50px; height: 50px;
+            color: rgba(255, 255, 255, 0.9); /* Make it white so it shows on dark clothes */
+            pointer-events: none; /* So it doesn't block clicks */
+        }
+        
+        .logo-overlay svg { width: 100%; height: 100%; }
+
+        /* Position variations */
+        .logo-hat { top: 50%; right: 20%; transform: translateY(-50%); width: 40px; } /* Side of hat */
+        .logo-topright { top: 20px; right: 20px; } /* Top right of sweater/trousers */
+
+        .product-card h3 { font-size: 1.4rem; margin-bottom: 5px; }
+        .product-card p { color: var(--coffee-dark); margin-bottom: 15px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .size-select {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            border: 1px solid #ccc; font-family: var(--font-body);
+            font-size: 0.9rem; outline: none; background-color: var(--coffee);
+            text-align: center; cursor: pointer;
+        }
+
+        .btn-order {
+            width: 100%; padding: 12px; background-color: var(--black); color: var(--coffee);
+            border: none; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
+            cursor: pointer; transition: background 0.3s; margin-top: auto;
+        }
+        .btn-order:hover { background-color: var(--caramel); color: var(--black); }
+
+        /* --- Pricing --- */
+        .pricing { padding: 100px 50px; background-color: var(--black); color: var(--coffee); text-align: center; }
+        .pricing h2 { font-size: 2.5rem; margin-bottom: 60px; }
+        .pricing-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto; }
+
+        .pricing-card { border: 1px solid rgba(234, 221, 207, 0.2); padding: 50px 40px; width: 100%; max-width: 350px; text-align: left; }
+        .pricing-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .price { font-family: var(--font-heading); font-size: 3rem; margin-bottom: 30px; color: var(--caramel); }
+        .pricing-card ul { list-style: none; margin-bottom: 40px; }
+        .pricing-card li { margin-bottom: 15px; font-weight: 300; font-size: 0.95rem; }
+        
+        .pricing-card .btn { width: 100%; text-align: center; border-color: var(--caramel); color: var(--caramel); }
+        .pricing-card .btn:hover { background-color: var(--caramel); color: var(--black); }
+
+        /* --- Contact --- */
+        .contact { padding: 120px 50px; background-color: var(--coffee); text-align: center; }
+        .contact h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .contact p { color: #333; margin-bottom: 30px; font-weight: 300; }
+
+        .contact-info { margin-bottom: 50px; font-size: 1.1rem; letter-spacing: 1px; }
+        .contact-info a { border-bottom: 1px solid transparent; transition: border-color 0.3s ease; }
+        .contact-info a:hover { border-bottom: 1px solid var(--caramel); color: var(--caramel); }
+        .contact-info span { margin: 0 15px; color: #999; }
+
+        .contact-form { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; border: 1px solid #ccc; font-family: var(--font-body); font-size: 0.9rem; outline: none; background-color: #fcfaf8; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--caramel); }
+        .contact-form button { background-color: var(--black); color: var(--coffee); border: none; padding: 15px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; cursor: pointer; transition: background 0.3s ease; }
+        .contact-form button:hover { background-color: var(--caramel); color: var(--black); }
+
+        /* --- Footer --- */
+        footer { background-color: #dfd0bf; padding: 40px 50px; text-align: center; font-size: 0.8rem; color: var(--coffee-dark); letter-spacing: 1px; }
+        .footer-contact { margin-bottom: 15px; font-size: 0.9rem; }
+        .footer-contact a { margin: 0 10px; transition: color 0.3s ease; }
+        .footer-contact a:hover { color: var(--caramel); }
+
+        /* NEW: Admin Button Styling */
+        .admin-btn {
+            background-color: transparent; border: 1px dashed var(--coffee-dark);
+            color: var(--coffee-dark); padding: 10px 20px; margin-top: 20px;
+            cursor: pointer; font-size: 0.8rem; border-radius: 5px;
+        }
+        .admin-btn:hover { background-color: var(--coffee-dark); color: var(--coffee); }
+
+        .whatsapp-float {
+            position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
+            background-color: #25d366; color: #FFF; border-radius: 50px;
+            text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000; display: flex; justify-content: center; align-items: center;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float svg { width: 35px; height: 35px; fill: white; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+            .mobile-menu { display: block; }
+            .hero h1 { font-size: 2.5rem; }
+            .about, .collection, .pricing, .contact { padding: 80px 20px; }
+            .product-grid { gap: 20px; }
+            .contact-info span { display: block; margin: 10px 0; }
+            .whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">KARONGO<span>TM</span></div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Collection</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="mobile-menu" onclick="toggleMenu()">&#9776;</div>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#home" onclick="toggleMenu()">Home</a>
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#services" onclick="toggleMenu()">Collection</a>
+        <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+        <a href="#contact" onclick="toggleMenu()">Contact</a>
+    </div>
+
+    <!-- Home / Hero -->
+    <section id="home" class="hero">
+        <p>The Art of Becoming</p>
+        <h1>KARONGO</h1>
+        <a href="#services" class="btn">Explore the Collection</a>
+        
+        <svg class="mountain-divider" viewBox="0 0 1440 200" preserveAspectRatio="none">
+            <circle cx="300" cy="80" r="60" fill="#b87d4b" opacity="0.4"/>
+            <path d="M0,200 L200,100 L350,150 L600,40 L800,120 L1000,80 L1200,150 L1440,50 L1440,200 Z" fill="none" stroke="#eaddcf" stroke-width="2"/>
+        </svg>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <h2>The Art of Becoming</h2>
+        <p>Karongo is more than a brand; it is a philosophy. We believe in the quiet power of growth, the beauty of the journey, and the grounding strength of staying true to your path.</p>
+        <p>Rooted in calm and designed for the modern individual, our pieces are crafted to accompany you through the peaks and valleys of everyday life.</p>
+    </section>
+
+    <!-- Collection -->
+    <section id="services" class="collection">
+        <h2 class="section-title">The Collection</h2>
+        <div class="product-grid">
+            
+            <!-- 1. The Flat Cap -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <!-- Placeholder image until you add yours in Admin -->
+                    <img id="img-cap" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&q=80" alt="Flat Cap" class="product-img">
+                    <!-- Logo Overlay -->
+                    <div class="logo-overlay logo-hat">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M 30 20 L 30 80 M 70 20 L 30 50 C 60 55, 80 70, 60 85 C 50 90, 35 80, 35 75" stroke="currentColor" fill="none" stroke-width="3"/>
+                            <text x="65" y="35" font-size="8" font-family="sans-serif" fill="currentColor">TM</text>
+                        </svg>
+                    </div>
+                </div>
+                <h3>The Signature Cap</h3>
+                <p>Black • Flat Cap</p>
+                <select class="size-select" id="size-cap">
+                    <option value="One Size">One Size (Adjustable)</option>
+                </select>
+                <button class="btn-order" onclick="orderProduct('Signature Flat Cap', 'size-cap')">Order via WhatsApp</button>
+            </div>
+
+            <!-- 2. The Quarter Zip -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img id="img-zip" src="https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?auto=format&fit=crop&w=400&q=80" alt="Quarter Zip" class="product-img">
+                    <div class="logo-overlay logo-topright">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M 30 20 L 30 80 M 70 20 L 30 50 C 60 55, 80 70, 60 85 C 50 90, 35 80, 35 75" stroke="currentColor" fill="none" stroke-width="3"/>
+                            <text x="65" y="35" font-size="8" font-family="sans-serif" fill="currentColor">TM</text>
+                        </svg>
+                    </div>
+                </div>
+                <h3>The Quarter Zip</h3>
+                <p>Black/Navy • Mock Neck</p>
+                <select class="size-select" id="size-quarterzip">
+                    <option value="S">Size S</option>
+                    <option value="M">Size M</option>
+                    <option value="L">Size L</option>
+                    <option value="XL">Size XL</option>
+                </select>
+                <button class="btn-order" onclick="orderProduct('Quarter Zip', 'size-quarterzip')">Order via WhatsApp</button>
+            </div>
+
+            <!-- 3. Tailored Trousers -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img id="img-trousers" src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&q=80" alt="Trousers" class="product-img">
+                    <div class="logo-overlay logo-topright">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M 30 20 L 30 80 M 70 20 L 30 50 C 60 55, 80 70, 60 85 C 50 90, 35 80, 35 75" stroke="currentColor" fill="none" stroke-width="3"/>
+                            <text x="65" y="35" font-size="8" font-family="sans-serif" fill="currentColor">TM</text>
+                        </svg>
+                    </div>
+                </div>
+                <h3>Old Money Trousers</h3>
+                <p>Beige/Brown • Pleated</p>
+                <select class="size-select" id="size-trousers">
+                    <option value="30">Waist 30</option>
+                    <option value="32">Waist 32</option>
+                    <option value="34">Waist 34</option>
+                    <option value="36">Waist 36</option>
+                </select>
+                <button class="btn-order" onclick="orderProduct('Old Money Trousers', 'size-trousers')">Order via WhatsApp</button>
+            </div>
+
+            <!-- 4. Pinstripe Trousers -->
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img id="img-pinstripe" src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&q=80" alt="Pinstripe Trousers" class="product-img">
+                    <div class="logo-overlay logo-topright">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M 30 20 L 30 80 M 70 20 L 30 50 C 60 55, 80 70, 60 85 C 50 90, 35 80, 35 75" stroke="currentColor" fill="none" stroke-width="3"/>
+                            <text x="65" y="35" font-size="8" font-family="sans-serif" fill="currentColor">TM</text>
+                        </svg>
+                    </div>
+                </div>
+                <h3>Pinstripe Trousers</h3>
+                <p>Black • Wide Leg</p>
+                <select class="size-select" id="size-pinstripe">
+                    <option value="30">Waist 30</option>
+                    <option value="32">Waist 32</option>
+                    <option value="34">Waist 34</option>
+                    <option value="36">Waist 36</option>
+                </select>
+                <button class="btn-order" onclick="orderProduct('Pinstripe Trousers', 'size-pinstripe')">Order via WhatsApp</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing">
+        <h2>Own the Journey</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Individual Piece</h3>
+                <div class="price">$45+</div>
+                <ul>
+                    <li>&#10003; Select any single item</li>
+                    <li>&#10003; Premium materials</li>
+                    <li>&#10003; Minimalist packaging</li>
+                    <li>&#10003; Free shipping over $100</li>
+                </ul>
+                <a href="#services" class="btn">Shop Now</a>
+            </div>
+            <div class="pricing-card" style="border-color: var(--caramel);">
+                <h3>The Becoming Set</h3>
+                <div class="price">$180</div>
+                <ul>
+                    <li>&#10003; The Signature Cap</li>
+                    <li>&#10003; The Quarter Zip</li>
+                    <li>&#10003; Old Money Trousers</li>
+                    <li>&#10003; Exclusive "Art of Becoming" Art Print</li>
+                </ul>
+                <a href="https://wa.me/254783587406?text=Hi%20Karongo,%20I%20want%20to%20order%20The%20Becoming%20Set%20(Full%20Bundle)" class="btn" target="_blank">Order Bundle</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <h2>Get in Touch</h2>
+        <p>Questions about the collection, wholesale, or the brand? Drop us a line.</p>
+        
+        <div class="contact-info">
+            <a href="mailto:kamaushack@gmail.com">kamaushack@gmail.com</a>
+            <span>|</span>
+            <a href="tel:+254783587406">+254 783 587 406</a>
+        </div>
+
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent.');">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-contact">
+            <a href="mailto:kamaushack@gmail.com">kamaushack@gmail.com</a>
+            <a href="tel:+254783587406">+254 783 587 406</a>
+        </div>
+        &copy; 2024 KARONGO™. THE ART OF BECOMING. ALL RIGHTS RESERVED.
+        
+        <!-- Admin Button -->
+        <br>
+        <button class="admin-btn" onclick="adminSetup()">⚙️ Admin: Update Images</button>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/254783587406?text=Hello%20Karongo,%20I%20am%20interested%20in%20your%20clothing." class="whatsapp-float" target="_blank">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.036 2.036c-7.749 0-14.036 6.287-14.036 14.036 0 2.469.642 4.887 1.863 7.017L2.036 30l7.164-1.879c2.072 1.138 4.411 1.741 6.836 1.741 7.749 0 14.036-6.287 14.036-14.036S23.785 2.036 16.036 2.036zM22.65 21.437c-.287.807-1.675 1.541-2.317 1.593-.642.052-1.247.236-3.986-.869-3.289-1.327-5.359-4.691-5.52-4.907-.16-.215-1.312-1.751-1.312-3.342 0-1.59.829-2.373 1.123-2.699.294-.327.643-.409.858-.409.215 0 .431.001.618.009.197.008.461-.074.722.551.267.642.908 2.224.988 2.385.08.161.134.348.026.563-.108.215-.161.348-.321.536-.16.187-.337.419-.482.562-.161.161-.329.337-.141.659.188.322.835 1.378 1.791 2.23 1.232 1.096 2.267 1.436 2.588 1.597.321.161.509.134.697-.08.188-.215.803-.936 1.017-1.257.215-.321.429-.268.722-.161.294.107 1.859.877 2.179 1.038.321.161.535.241.615.375.08.134.08.776-.207 1.583z" />
+        </svg>
+    </a>
+
+    <script>
+        // --- Mobile Menu ---
+        function toggleMenu() {
+            var nav = document.getElementById("mobileNav");
+            if (nav.style.display === "flex") {
+                nav.style.display = "none";
+            } else {
+                nav.style.display = "flex";
+            }
+        }
+
+        // --- WhatsApp Order Function ---
+        function orderProduct(productName, sizeId) {
+            var size = document.getElementById(sizeId).value;
+            var phoneNumber = "254783587406"; 
+            var message = "Hello Karongo! I would like to order the *" + productName + "* in size *" + size + ".";
+            var whatsappUrl = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // --- Admin Image Swapper ---
+        function adminSetup() {
+            var pass = prompt("Enter Admin Password to change images:");
+            if (pass === "karongo2024") { // Change this password if you want
+                var capUrl = prompt("Enter Image URL for the Flat Cap (leave blank to keep current):", localStorage.getItem('img_cap') || "");
+                if (capUrl) { localStorage.setItem('img_cap', capUrl); document.getElementById('img-cap').src = capUrl; }
+
+                var zipUrl = prompt("Enter Image URL for the Quarter Zip:", localStorage.getItem('img_zip') || "");
+                if (zipUrl) { localStorage.setItem('img_zip', zipUrl); document.getElementById('img-zip').src = zipUrl; }
+
+                var trousersUrl = prompt("Enter Image URL for Old Money Trousers:", localStorage.getItem('img_trousers') || "");
+                if (trousersUrl) { localStorage.setItem('img_trousers', trousersUrl); document.getElementById('img-trousers').src = trousersUrl; }
+                
+                var pinstripeUrl = prompt("Enter Image URL for Pinstripe Trousers:", localStorage.getItem('img_pinstripe') || "");
+                if (pinstripeUrl) { localStorage.setItem('img_pinstripe', pinstripeUrl); document.getElementById('img-pinstripe').src = pinstripeUrl; }
+                
+                alert("Images updated! (Note: This saves to your current phone/browser. For everyone to see them permanently, you must paste the URLs directly into the code).");
+            } else if (pass !== null) {
+                alert("Incorrect password.");
+            }
+        }
+
+        // --- Load Saved Images on Page Load ---
+        window.onload = function() {
+            if(localStorage.getItem('img_cap')) document.getElementById('img-cap').src = localStorage.getItem('img_cap');
+            if(localStorage.getItem('img_zip')) document.getElementById('img-zip').src = localStorage.getItem('img_zip');
+            if(localStorage.getItem('img_trousers')) document.getElementById('img-trousers').src = localStorage.getItem('img_trousers');
+            if(localStorage.getItem('img_pinstripe')) document.getElementById('img-pinstripe').src = localStorage.getItem('img_pinstripe');
+        }
+    </script>
+</body>
+</html>
